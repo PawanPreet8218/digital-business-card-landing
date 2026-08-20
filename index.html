@@ -144,7 +144,7 @@ img,svg{display:block;max-width:100%;}
 /* hero visual */
 .visual{position:relative;margin:44px auto 0;width:100%;max-width:330px;padding-bottom:26px;}
 .vcard{
-  position:relative;overflow:hidden;background:var(--card);border-radius:26px;padding:22px 20px 20px;
+  position:relative;overflow:hidden;background:var(--card);will-change:transform;border-radius:26px;padding:22px 20px 20px;
   box-shadow:0 40px 60px -34px rgba(20,30,25,.55),0 2px 0 rgba(255,255,255,.9) inset;
   animation:float 8s ease-in-out infinite;
 }
@@ -362,6 +362,13 @@ img,svg{display:block;max-width:100%;}
 @media (min-width:720px){.sticky{display:none;}}
 @media (prefers-reduced-motion:reduce){.sticky{transition:none;}}
 
+/* on phones the hero card sits still — one less endless animation */
+@media (max-width:759px){
+  .vcard,.vqr{animation:none;}
+}
+/* it also stops as soon as it is off screen */
+.hero.rested .vcard,.hero.rested .vqr{animation-play-state:paused;}
+
 /* phones repaint big blurred shadows slowly, so keep them small there */
 @media (max-width:759px){
   .vcard{box-shadow:0 20px 30px -22px rgba(20,30,25,.5);}
@@ -478,7 +485,7 @@ img,svg{display:block;max-width:100%;}
 .s-make .phone{position:relative;width:300px;height:478px;padding:8px;border-radius:34px;
   background:linear-gradient(160deg,#26362F,#131E19);
   box-shadow:0 26px 50px -22px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.09);flex:0 0 auto;}
-.s-make .screen{position:relative;width:284px;height:462px;border-radius:27px;background:var(--ink);overflow:hidden;}
+.s-make .screen{position:relative;width:284px;height:462px;border-radius:27px;background:var(--ink);overflow:hidden;contain:layout paint;}
 
 /* chrome address bar, like the real recording */
 .s-make .bar{position:absolute;top:0;left:0;right:0;height:32px;z-index:4;background:#0A100E;
@@ -521,26 +528,31 @@ img,svg{display:block;max-width:100%;}
 @keyframes glow-3-m{0%,18.8%{opacity:0;}19.4%,25.6%{opacity:1;}26.2%,100%{opacity:0;}}
 @keyframes glow-4-m{0%,26%{opacity:0;}26.7%,32.2%{opacity:1;}33%,100%{opacity:0;}}
 
-.s-make .type{display:inline-block;white-space:nowrap;overflow:hidden;width:0;vertical-align:bottom;}
+.s-make .type{display:inline-block;white-space:nowrap;vertical-align:bottom;clip-path:inset(0 100% 0 0);}
 .s-make .type--name{animation:t-name-m var(--loop) infinite steps(12,end);}
 .s-make .type--role{animation:t-role-m var(--loop) infinite steps(8,end);}
 .s-make .type--org{animation:t-org-m var(--loop) infinite steps(16,end);}
 .s-make .type--bio{animation:t-bio-m var(--loop) infinite steps(24,end);}
-@keyframes t-name-m{0%,4.4%{width:0;}12.2%,100%{width:11.4ch;}}
-@keyframes t-role-m{0%,13.3%{width:0;}18.3%,100%{width:8ch;}}
-@keyframes t-org-m{0%,19.4%{width:0;}25.6%,100%{width:16ch;}}
-@keyframes t-bio-m{0%,26.7%{width:0;}32.2%,100%{width:23ch;}}
+@keyframes t-name-m{0%,4.4%{clip-path:inset(0 100% 0 0);}12.2%,100%{clip-path:inset(0 0 0 0);}}
+@keyframes t-role-m{0%,13.3%{clip-path:inset(0 100% 0 0);}18.3%,100%{clip-path:inset(0 0 0 0);}}
+@keyframes t-org-m{0%,19.4%{clip-path:inset(0 100% 0 0);}25.6%,100%{clip-path:inset(0 0 0 0);}}
+@keyframes t-bio-m{0%,26.7%{clip-path:inset(0 100% 0 0);}32.2%,100%{clip-path:inset(0 0 0 0);}}
 .s-make .caret{width:2px;height:1.05em;margin-left:1px;background:var(--amber-deep);opacity:0;}
-.s-make .caret--1{animation:c1-m var(--loop) infinite, blink-m .9s infinite step-end;}
-.s-make .caret--2{animation:c2-m var(--loop) infinite, blink-m .9s infinite step-end;}
-.s-make .caret--3{animation:c3-m var(--loop) infinite, blink-m .9s infinite step-end;}
-.s-make .caret--4{animation:c4-m var(--loop) infinite, blink-m .9s infinite step-end;}
-.s-make .caret--5{animation:c5-m var(--loop) infinite, blink-m .9s infinite step-end;}
+.s-make .caret--1{animation:c1-m var(--loop) infinite, blink-m .9s infinite step-end, c1-move-m var(--loop) infinite steps(12,end);}
+.s-make .caret--2{animation:c2-m var(--loop) infinite, blink-m .9s infinite step-end, c2-move-m var(--loop) infinite steps(8,end);}
+.s-make .caret--3{animation:c3-m var(--loop) infinite, blink-m .9s infinite step-end, c3-move-m var(--loop) infinite steps(16,end);}
+.s-make .caret--4{animation:c4-m var(--loop) infinite, blink-m .9s infinite step-end, c4-move-m var(--loop) infinite steps(24,end);}
+.s-make .caret--5{animation:c5-m var(--loop) infinite, blink-m .9s infinite step-end, c5-move-m var(--loop) infinite steps(6,end);}
 @keyframes c1-m{0%,4.3%{opacity:0;}4.4%,12.8%{opacity:1;}12.9%,100%{opacity:0;}}
 @keyframes c2-m{0%,13.2%{opacity:0;}13.3%,18.8%{opacity:1;}18.9%,100%{opacity:0;}}
 @keyframes c3-m{0%,19.3%{opacity:0;}19.4%,26%{opacity:1;}26.1%,100%{opacity:0;}}
 @keyframes c4-m{0%,26.6%{opacity:0;}26.7%,32.6%{opacity:1;}32.7%,100%{opacity:0;}}
 @keyframes c5-m{0%,66.6%{opacity:0;}66.7%,72.1%{opacity:1;}72.2%,100%{opacity:0;}}
+@keyframes c1-move-m{0%,4.4%{transform:translateX(-11.4ch);}100%,100%{transform:translateX(0);}}
+@keyframes c2-move-m{0%,13.3%{transform:translateX(-8ch);}100%,100%{transform:translateX(0);}}
+@keyframes c3-move-m{0%,19.4%{transform:translateX(-16ch);}100%,100%{transform:translateX(0);}}
+@keyframes c4-move-m{0%,26.7%{transform:translateX(-23ch);}100%,100%{transform:translateX(0);}}
+@keyframes c5-move-m{0%,66.7%{transform:translateX(-5.8ch);}100%,100%{transform:translateX(0);}}
 @keyframes blink-m{0%,50%{visibility:visible;}51%,100%{visibility:hidden;}}
 
 /* photo */
@@ -584,10 +596,10 @@ img,svg{display:block;max-width:100%;}
   transform-origin:50% 42%;animation:crop-pan-m var(--loop) infinite;}
 .s-make .crop__slider{height:5px;border-radius:5px;background:#F2F8F5;position:relative;margin-bottom:12px;}
 .s-make .crop__slider i{
-  position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:#3E7BD8;
-  transform:translate(-50%,-50%);left:4%;animation:crop-knob-m var(--loop) infinite;
+  position:absolute;top:50%;left:5%;width:13px;height:13px;border-radius:50%;background:#3E7BD8;
+  transform:translate(-50%,-50%);animation:crop-knob-m var(--loop) infinite;
 }
-@keyframes crop-knob-m{0%,39.8%{left:5%;}42.6%,100%{left:47%;}}
+@keyframes crop-knob-m{0%,39.8%{transform:translate(-50%,-50%);}42.6%,100%{transform:translate(-50%,-50%) translateX(91px);}}
 .s-make .crop__row{display:flex;gap:9px;}
 .s-make .crop__btn{
   flex:1;height:34px;border-radius:10px;display:grid;place-items:center;
@@ -658,7 +670,7 @@ img,svg{display:block;max-width:100%;}
   border-radius:9px;opacity:0;animation:glow-5-m var(--loop) infinite;}
 @keyframes glow-5-m{0%,65.5%{opacity:0;}66.7%,72.1%{opacity:1;}73%,100%{opacity:0;}}
 .s-make .type--slug{animation:t-slug-m var(--loop) infinite steps(6,end);}
-@keyframes t-slug-m{0%,66.7%{width:0;}72.1%,100%{width:5.8ch;}}
+@keyframes t-slug-m{0%,66.7%{clip-path:inset(0 100% 0 0);}72.1%,100%{clip-path:inset(0 0 0 0);}}
 .s-make .hint{margin:4px 0 0;font-size:8px;font-weight:600;color:var(--sage);opacity:.75;}
 .s-make .cta{margin-top:11px;height:38px;border-radius:11px;background:var(--amber);
   color:#241705;font-size:12px;font-weight:800;display:grid;place-items:center;
@@ -701,8 +713,7 @@ img,svg{display:block;max-width:100%;}
 .s-make .qr__scan{position:absolute;z-index:1;left:0;right:0;height:38%;top:-40%;opacity:0;
   background:linear-gradient(180deg,rgba(240,166,78,0),rgba(240,166,78,.45));
   border-bottom:2px solid var(--amber);animation:scan-m var(--loop) infinite;}
-@keyframes scan-m{0%,83%{top:-40%;opacity:0;}84%{opacity:1;}90%{top:100%;opacity:1;}
-  90.5%,91.5%{opacity:0;top:-40%;}92.5%{opacity:1;}96%{top:100%;opacity:1;}96.5%,100%{opacity:0;}}
+@keyframes scan-m{0%,83%{transform:translateY(0);opacity:0;}84%{opacity:1;}90%{transform:translateY(370%);opacity:1;}90.5%,91.5%{opacity:0;transform:translateY(0);}92.5%{opacity:1;}96%{transform:translateY(370%);opacity:1;}96.5%,100%{opacity:0;}}
 .s-make .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px;
   opacity:0;animation:acts-in-m var(--loop) infinite;}
 @keyframes acts-in-m{0%,81%{opacity:0;transform:translateY(6px);}84%,100%{opacity:1;transform:none;}}
@@ -791,8 +802,8 @@ img,svg{display:block;max-width:100%;}
 }
 
 /* ---------- play only when visible ---------- */
-.s-make .hiw .steps *, .s-make .hiw .stage *{animation-play-state:paused;}
-.s-make .hiw.is-live .steps *, .s-make .hiw.is-live .stage *{animation-play-state:running;}
+.s-make .hiw .steps *, .s-make .hiw .stage *, .s-make .hiw .steps *::before, .s-make .hiw .steps *::after, .s-make .hiw .stage *::before, .s-make .hiw .stage *::after{animation-play-state:paused !important;}
+.s-make .hiw.is-live .steps *, .s-make .hiw.is-live .stage *, .s-make .hiw.is-live .steps *::before, .s-make .hiw.is-live .steps *::after, .s-make .hiw.is-live .stage *::before, .s-make .hiw.is-live .stage *::after{animation-play-state:running !important;}
 
 @media (prefers-reduced-motion:reduce){
   .s-make .hiw .steps *, .s-make .hiw .stage *, .s-make .hiw .steps *::before, .s-make .hiw .steps *::after, .s-make .hiw .stage *::before, .s-make .hiw .stage *::after{animation:none !important;}
@@ -849,7 +860,7 @@ img,svg{display:block;max-width:100%;}
 .s-use .phone{position:relative;width:300px;height:478px;padding:8px;border-radius:34px;
   background:linear-gradient(160deg,#26362F,#131E19);
   box-shadow:0 26px 50px -22px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.09);flex:0 0 auto;}
-.s-use .screen{position:relative;width:284px;height:462px;border-radius:27px;background:var(--ink);overflow:hidden;}
+.s-use .screen{position:relative;width:284px;height:462px;border-radius:27px;background:var(--ink);overflow:hidden;contain:layout paint;}
 
 .s-use .bar{position:absolute;top:0;left:0;right:0;height:32px;z-index:4;background:#0A100E;
   display:flex;align-items:center;gap:7px;padding:0 12px;border-bottom:1px solid rgba(255,255,255,.06);}
@@ -922,13 +933,13 @@ img,svg{display:block;max-width:100%;}
 @keyframes g1-u{0%,62%{opacity:0;}63.5%,69%{opacity:1;}70%,100%{opacity:0;}}
 @keyframes g2-u{0%,69.5%{opacity:0;}70.5%,75%{opacity:1;}76%,100%{opacity:0;}}
 @keyframes g3-u{0%,75.5%{opacity:0;}76.5%,81%{opacity:1;}82%,100%{opacity:0;}}
-.s-use .type{display:inline-block;white-space:nowrap;overflow:hidden;width:0;vertical-align:bottom;}
+.s-use .type{display:inline-block;white-space:nowrap;vertical-align:bottom;clip-path:inset(0 100% 0 0);}
 .s-use .type--n{animation:t-n-u var(--loop) infinite steps(12,end);}
 .s-use .type--p{animation:t-p-u var(--loop) infinite steps(15,end);}
 .s-use .type--e{animation:t-e-u var(--loop) infinite steps(15,end);}
-@keyframes t-n-u{0%,63.5%{width:0;}69%,100%{width:11.4ch;}}
-@keyframes t-p-u{0%,70.5%{width:0;}75%,100%{width:14.2ch;}}
-@keyframes t-e-u{0%,76.5%{width:0;}81%,100%{width:14.2ch;}}
+@keyframes t-n-u{0%,63.5%{clip-path:inset(0 100% 0 0);}69%,100%{clip-path:inset(0 0 0 0);}}
+@keyframes t-p-u{0%,70.5%{clip-path:inset(0 100% 0 0);}75%,100%{clip-path:inset(0 0 0 0);}}
+@keyframes t-e-u{0%,76.5%{clip-path:inset(0 100% 0 0);}81%,100%{clip-path:inset(0 0 0 0);}}
 .s-use .ph--1{animation:ph1-u var(--loop) infinite;}
 .s-use .ph--2{animation:ph2-u var(--loop) infinite;}
 .s-use .ph--3{animation:ph3-u var(--loop) infinite;}
@@ -936,12 +947,15 @@ img,svg{display:block;max-width:100%;}
 @keyframes ph2-u{0%,70.4%{opacity:1;}70.5%,100%{opacity:0;}}
 @keyframes ph3-u{0%,76.4%{opacity:1;}76.5%,100%{opacity:0;}}
 .s-use .caret{width:2px;height:1.05em;margin-left:1px;background:var(--amber);opacity:0;}
-.s-use .caret--1{animation:c1-u var(--loop) infinite, blink-u .9s infinite step-end;}
-.s-use .caret--2{animation:c2-u var(--loop) infinite, blink-u .9s infinite step-end;}
-.s-use .caret--3{animation:c3-u var(--loop) infinite, blink-u .9s infinite step-end;}
+.s-use .caret--1{animation:c1-u var(--loop) infinite, blink-u .9s infinite step-end, c1-move-u var(--loop) infinite steps(12,end);}
+.s-use .caret--2{animation:c2-u var(--loop) infinite, blink-u .9s infinite step-end, c2-move-u var(--loop) infinite steps(15,end);}
+.s-use .caret--3{animation:c3-u var(--loop) infinite, blink-u .9s infinite step-end, c3-move-u var(--loop) infinite steps(15,end);}
 @keyframes c1-u{0%,63.4%{opacity:0;}63.5%,69.5%{opacity:1;}69.6%,100%{opacity:0;}}
 @keyframes c2-u{0%,70.4%{opacity:0;}70.5%,75.5%{opacity:1;}75.6%,100%{opacity:0;}}
 @keyframes c3-u{0%,76.4%{opacity:0;}76.5%,81.5%{opacity:1;}81.6%,100%{opacity:0;}}
+@keyframes c1-move-u{0%,63.5%{transform:translateX(-11.4ch);}100%,100%{transform:translateX(0);}}
+@keyframes c2-move-u{0%,70.5%{transform:translateX(-14.2ch);}100%,100%{transform:translateX(0);}}
+@keyframes c3-move-u{0%,76.5%{transform:translateX(-14.2ch);}100%,100%{transform:translateX(0);}}
 @keyframes blink-u{0%,50%{visibility:visible;}51%,100%{visibility:hidden;}}
 .s-use .send{height:38px;border-radius:11px;background:var(--amber);color:#241705;
   font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;
@@ -1056,8 +1070,8 @@ img,svg{display:block;max-width:100%;}
 }
 
 /* ---------- play only when visible ---------- */
-.s-use .hiw .steps *, .s-use .hiw .stage *{animation-play-state:paused;}
-.s-use .hiw.is-live .steps *, .s-use .hiw.is-live .stage *{animation-play-state:running;}
+.s-use .hiw .steps *, .s-use .hiw .stage *, .s-use .hiw .steps *::before, .s-use .hiw .steps *::after, .s-use .hiw .stage *::before, .s-use .hiw .stage *::after{animation-play-state:paused !important;}
+.s-use .hiw.is-live .steps *, .s-use .hiw.is-live .stage *, .s-use .hiw.is-live .steps *::before, .s-use .hiw.is-live .steps *::after, .s-use .hiw.is-live .stage *::before, .s-use .hiw.is-live .stage *::after{animation-play-state:running !important;}
 
 @media (prefers-reduced-motion:reduce){
   .s-use .hiw .steps *, .s-use .hiw .stage *, .s-use .hiw .steps *::before, .s-use .hiw .steps *::after, .s-use .hiw .stage *::before, .s-use .hiw .stage *::after{animation:none !important;}
@@ -1770,6 +1784,14 @@ img,svg{display:block;max-width:100%;}
       },{threshold:.2});
       secs.forEach(function(s){ io.observe(s); });
     }
+  }
+
+  /* ---- the hero card only animates while the hero is on screen ---- */
+  var heroEl=document.querySelector('.hero');
+  if(heroEl && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(e){
+      heroEl.classList.toggle('rested', !e[0].isIntersecting);
+    },{threshold:0}).observe(heroEl);
   }
 
   /* ---- sticky CTA: show once the hero is gone, hide at the closing CTA ---- */
